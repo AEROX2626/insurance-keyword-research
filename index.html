@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דוח מחקר מילות מפתח בגוגל | סוכנות לביטוח ופיננסים</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Heebo', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff; }
+      .print-break { page-break-inside: avoid; }
+      .shadow-sm, .shadow-md { box-shadow: none !important; border: 1px solid #e2e8f0 !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+
+  <!-- Top Header -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold tracking-wider uppercase mb-1">
+          <span>נטקליק דיגיטל • מחקר ואסטרטגיית SEO</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-extrabold text-white">דוח מחקר מילות מפתח בגוגל – סוכנות לביטוח ופיננסים</h1>
+      </div>
+      <div class="flex items-center gap-3 no-print">
+        <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition flex items-center gap-2 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          ייצוא לאקסל (CSV)
+        </button>
+        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          הדפסה / שמירה כ-PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-8">
+
+    <!-- KPI Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-slate-500 text-sm font-medium">סך חיפושים חודשיים שנבדקו</div>
+        <div class="text-3xl font-extrabold text-slate-900 mt-1">220,000+</div>
+        <div class="text-xs text-slate-400 mt-1">נתוני כלי מילות המפתח של גוגל בישראל</div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-slate-500 text-sm font-medium">חיפושי סרק שסוננו החוצה</div>
+        <div class="text-3xl font-extrabold text-rose-600 mt-1">48,000+</div>
+        <div class="text-xs text-slate-400 mt-1">סינון "אזור אישי", "טלפון" ו"ביטוח תלמידים"</div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-emerald-200 bg-emerald-50/30">
+        <div class="text-emerald-800 text-sm font-semibold">פוטנציאל חיפושים מסחרי (נטו)</div>
+        <div class="text-3xl font-extrabold text-emerald-600 mt-1">172,500+</div>
+        <div class="text-xs text-emerald-700 mt-1">לקוחות המחפשים השוואה, ייעוץ ופתיחת קופות</div>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-slate-500 text-sm font-medium">מספר מילות מפתח בדוח</div>
+        <div class="text-3xl font-extrabold text-blue-600 mt-1" id="total-kw-count">0</div>
+        <div class="text-xs text-slate-400 mt-1">מחולקות ל-7 אשכולות ליבה</div>
+      </div>
+    </section>
+
+    <!-- Overview Summary Table -->
+    <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break">
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
+        <h2 class="text-lg font-bold text-slate-800">מבט על – סיכום נפחי חיפוש והזדמנויות עסקיות לפי תחום</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-right border-collapse">
+          <thead>
+            <tr class="bg-slate-100/70 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <th class="py-3 px-6 font-bold">תחום פעילות</th>
+              <th class="py-3 px-6 font-bold">חיפושים רלוונטיים בחודש</th>
+              <th class="py-3 px-6 font-bold">מוקד הרווחיות לסוכנות</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 text-sm">
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-6 font-bold text-slate-900">1. פנסיה ותכנון פרישה</td>
+              <td class="py-3.5 px-6 font-extrabold text-blue-600">68,500+</td>
+              <td class="py-3.5 px-6 text-slate-600">ניוד צבירות, פנסיה לעצמאים, קיבוע זכויות (טופס 161ד) וייעוץ פנסיוני</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-6 font-bold text-slate-900">2. קרנות השתלמות</td>
+              <td class="py-3.5 px-6 font-extrabold text-blue-600">64,000+</td>
+              <td class="py-3.5 px-6 text-slate-600">פתיחת קרנות לעצמאים (הטבות מס) וניוד קרנות נזילות לבתי השקעות</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-6 font-bold text-slate-900">3. קופת גמל להשקעה</td>
+              <td class="py-3.5 px-6 font-extrabold text-blue-600">32,500+</td>
+              <td class="py-3.5 px-6 text-slate-600">גיוס הון פנוי, חיסכון לילדים והשוואה מול פוליסות חיסכון פיננסיות</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-6 font-bold text-slate-900">4. תיקון 190 (גילאי 60+)</td>
+              <td class="py-3.5 px-6 font-extrabold text-blue-600">2,850+</td>
+              <td class="py-3.5 px-6 text-slate-600">הפקדות חד-פעמיות בסכומים גבוהים (מאות אלפי ש"ח) ותכנון הורשה</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-6 font-bold text-slate-900">5. ביטוח תאונות אישיות</td>
+              <td class="py-3.5 px-6 font-extrabold text-blue-600">2,800+</td>
+              <td class="py-3.5 px-6 text-slate-600">מכירת פוליסות פרטיות וליווי אישי בתביעות מול חברות ישירות</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-6 font-bold text-slate-900">6. ביטוח מחלות קשות</td>
+              <td class="py-3.5 px-6 font-extrabold text-blue-600">2,650+</td>
+              <td class="py-3.5 px-6 text-slate-600">השוואת פוליסות ("מענקית זהב", "קרן אור טופ") ומכירת כיסוי פיצוי כספי</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-6 font-bold text-slate-900">7. ביטוחי משכנתא (חיים ומבנה)</td>
+              <td class="py-3.5 px-6 font-extrabold text-blue-600">2,170+</td>
+              <td class="py-3.5 px-6 text-slate-600">העברת מבוטחים מהבנקים לסוכנות והוזלת אלפי שקלים בעלויות הביטוח</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Interactive Filter Bar -->
+    <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 sticky top-[73px] z-20 no-print space-y-4">
+      <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <!-- Search Input -->
+        <div class="relative w-full md:w-96">
+          <input type="text" id="searchInput" oninput="renderReport()" placeholder="חיפוש מהיר של מילת מפתח..." class="w-full pr-10 pl-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition">
+          <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+
+        <!-- Brand Toggle -->
+        <div class="flex items-center gap-4 w-full md:w-auto justify-end">
+          <label class="inline-flex items-center cursor-pointer select-none text-sm font-medium text-slate-700">
+            <input type="checkbox" id="showBrandsToggle" checked onchange="renderReport()" class="sr-only peer">
+            <div class="relative w-10 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+            <span class="mr-2.5">הצג חיפושי חברות ביטוח ובתי השקעות</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Category Pills -->
+      <div class="flex flex-wrap gap-2" id="categoryPills">
+        <button onclick="setCategory('all')" data-cat="all" class="cat-btn bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition">הכל</button>
+        <button onclick="setCategory('pension')" data-cat="pension" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">1. פנסיה ופרישה</button>
+        <button onclick="setCategory('study')" data-cat="study" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">2. קרנות השתלמות</button>
+        <button onclick="setCategory('gemel')" data-cat="gemel" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">3. גמל להשקעה</button>
+        <button onclick="setCategory('tikun190')" data-cat="tikun190" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">4. תיקון 190</button>
+        <button onclick="setCategory('mortgage')" data-cat="mortgage" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">5. ביטוח משכנתא</button>
+        <button onclick="setCategory('illness')" data-cat="illness" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">6. מחלות קשות</button>
+        <button onclick="setCategory('accident')" data-cat="accident" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">7. תאונות אישיות</button>
+      </div>
+    </section>
+
+    <!-- Dynamic Report Sections Container -->
+    <div id="reportContainer" class="space-y-8"></div>
+
+  </main>
+
+  <script>
+    const reportData = [
+      {
+        id: 'pension',
+        title: '1. תחום פנסיה ותכנון פרישה',
+        subtitle: 'ביטויי ייעוץ פנסיוני, השוואת קרנות, פנסיה לעצמאים, קיבוע זכויות וסקירת גופים מנהלים',
+        keywords: [
+          // Core & High Intent
+          { kw: 'פנסיה נט', vol: 18100, type: 'השוואה ומידע', note: 'גולשים הבודקים תשואות ודמי ניהול', isBrand: false },
+          { kw: 'פנסיה', vol: 14800, type: 'ביטוי ראשי', note: 'ביטוי עוגן מרכזי לתחום', isBrand: false },
+          { kw: 'קרן פנסיה', vol: 2900, type: 'ביטוי ראשי', note: 'עמוד שירות מרכזי', isBrand: false },
+          { kw: 'מחשבון פנסיה', vol: 2900, type: 'כלי / מחשבון', note: 'מחשבון לחישוב קצבה ואיסוף לידים', isBrand: false },
+          { kw: 'פנסיה תקציבית', vol: 1900, type: 'תכנון פרישה', note: 'עובדי מדינה וגמלאים', isBrand: false },
+          { kw: 'השוואת קרנות פנסיה', vol: 1300, type: 'ביטוי זהב', note: 'לקוחות המחפשים לעבור חברה או להוזיל עלויות', isBrand: false },
+          { kw: 'משיכת כספי פנסיה', vol: 1300, type: 'פעולה כספית', note: 'הזדמנות להציע הלוואה במקום תשלום 35% מס', isBrand: false },
+          { kw: 'יועץ פנסיוני', vol: 1000, type: 'ביטוי זהב', note: 'פנייה ישירה לאיש מקצוע', isBrand: false },
+          { kw: 'משיכת כספי פנסיה ללא סיום עבודה', vol: 1000, type: 'פעולה כספית', note: 'חיפוש פתרון אשראי או פדיון פנסיוני', isBrand: false },
+          { kw: 'קיבוע זכויות פנסיה', vol: 880, type: 'ביטוי זהב', note: 'לקוחות לפני פרישה עם צבירות גדולות (טופס 161ד)', isBrand: false },
+          { kw: 'ביטוחי מנהלים', vol: 880, type: 'מוצר משלים', note: 'בדיקת כדאיות מול קרן פנסיה', isBrand: false },
+          { kw: 'גמל נט פנסיה', vol: 880, type: 'השוואה ומידע', note: 'השוואת ביצועים במערכת האוצר', isBrand: false },
+          { kw: 'הפרשה לפנסיה', vol: 720, type: 'מידע ורגולציה', note: 'בדיקת אחוזי הפקדה חוקיים', isBrand: false },
+          { kw: 'דמי ניהול פנסיה', vol: 590, type: 'כוונת רכישה', note: 'לקוחות המעוניינים להוזיל עלויות', isBrand: false },
+          { kw: 'משיכת כספי פנסיה ללא מס כל זכות', vol: 590, type: 'תכנון מס', note: 'בירור זכויות מיסוי במשיכה', isBrand: false },
+          { kw: 'גיל פנסיה', vol: 590, type: 'תכנון פרישה', note: 'לקוחות המתקרבים לגיל פרישה', isBrand: false },
+          { kw: 'מיי גמל נט פנסיה', vol: 590, type: 'השוואה ומידע', note: 'השוואת קופות ותשואות', isBrand: false },
+          { kw: 'יועץ פנסיוני מומלץ', vol: 480, type: 'ביטוי זהב', note: 'כוונת התקשרות גבוהה מאוד', isBrand: false },
+          { kw: 'ייעוץ פנסיה', vol: 480, type: 'ביטוי זהב', note: 'כוונת התקשרות ישירה', isBrand: false },
+          { kw: 'קרן פנסיה ברירת מחדל', vol: 480, type: 'השוואה ומידע', note: 'בדיקת הקרנות הנבחרות של משרד האוצר', isBrand: false },
+          { kw: 'בדיקת פנסיה', vol: 390, type: 'ביטוי זהב', note: 'ליד ישיר לבדיקת תיק פנסיוני', isBrand: false },
+          { kw: 'סוכן פנסיה', vol: 390, type: 'ביטוי זהב', note: 'חיפוש ישיר של סוכן ביטוח פנסיוני', isBrand: false },
+          { kw: 'קרן פנסיה השוואה', vol: 390, type: 'השוואה', note: 'השוואה לפני ניוד או פתיחה', isBrand: false },
+          { kw: 'השוואת פנסיה', vol: 390, type: 'השוואה', note: 'השוואה לפני ניוד או פתיחה', isBrand: false },
+          { kw: 'הלוואה על חשבון הפנסיה', vol: 390, type: 'כוונת רכישה', note: 'לקיחת הלוואה בריבית מועדפת', isBrand: false },
+          { kw: 'חברות פנסיה', vol: 390, type: 'השוואה', note: 'סקירת הגופים המנהלים בישראל', isBrand: false },
+          { kw: 'משיכת פנסיה', vol: 390, type: 'פעולה כספית', note: 'בירור תנאי פדיון כספים', isBrand: false },
+          { kw: 'קופת פנסיה', vol: 390, type: 'ביטוי ראשי', note: 'וריאציית חיפוש לעמוד הראשי', isBrand: false },
+          { kw: 'קופות פנסיה', vol: 390, type: 'ביטוי ראשי', note: 'וריאציית חיפוש לעמוד הראשי', isBrand: false },
+          { kw: 'ביטוח פנסיה', vol: 390, type: 'ביטוי ראשי', note: 'וריאציית חיפוש לעמוד הראשי', isBrand: false },
+          { kw: 'פנסיה מוקדמת', vol: 390, type: 'תכנון פרישה', note: 'ליווי ביציאה מוקדמת לגמלאות', isBrand: false },
+          { kw: 'תשואות קרנות פנסיה', vol: 390, type: 'השוואה', note: 'בדיקת רווחים ומסלולים', isBrand: false },
+          { kw: 'חוק פנסיה חובה', vol: 390, type: 'מידע ורגולציה', note: 'מעסיקים ועצמאים', isBrand: false },
+          { kw: 'פנסיה נט משרד האוצר', vol: 390, type: 'השוואה ומידע', note: 'בדיקת נתוני אוצר', isBrand: false },
+          { kw: 'פנסיה לעצמאים', vol: 320, type: 'ביטוי זהב', note: 'קהל יעד רווחי מאוד (הפקדות חובה והטבות מס)', isBrand: false },
+          { kw: 'הלוואה מקרן פנסיה', vol: 320, type: 'כוונת רכישה', note: 'אשראי פנסיוני בתנאים נוחים', isBrand: false },
+          { kw: 'הלוואה כנגד קרן פנסיה', vol: 320, type: 'כוונת רכישה', note: 'אשראי פנסיוני בתנאים נוחים', isBrand: false },
+          { kw: 'פנסיה ברירת מחדל', vol: 320, type: 'השוואה ומידע', note: 'בדיקת דמי ניהול מוזלים', isBrand: false },
+          { kw: 'משיכת פנסיה ללא מס', vol: 320, type: 'תכנון מס', note: 'בדיקת זכאות לפטור ממס', isBrand: false },
+          { kw: 'תשואות פנסיה', vol: 320, type: 'השוואה', note: 'השוואת ביצועים', isBrand: false },
+          { kw: 'פנסיה תקציבית עובדי מדינה', vol: 320, type: 'תכנון פרישה', note: 'תכנון פרישה למגזר הציבורי', isBrand: false },
+          // Brands
+          { kw: 'הראל פנסיה', vol: 22200, type: 'מותג / חברה', note: 'סקירה והשוואת קרן הפנסיה של הראל', isBrand: true },
+          { kw: 'הפניקס פנסיה', vol: 4400, type: 'מותג / חברה', note: 'סקירה והשוואת מסלולי הפניקס', isBrand: true },
+          { kw: 'מיטב פנסיה', vol: 3600, type: 'מותג / חברה', note: 'סקירת קרן הפנסיה של מיטב', isBrand: true },
+          { kw: 'עמיתים קרנות פנסיה', vol: 3600, type: 'מותג / חברה', note: 'קרנות הפנסיה הוותיקות שבהסדר', isBrand: true },
+          { kw: 'מיטב דש פנסיה', vol: 2900, type: 'מותג / חברה', note: 'סקירת מיטב בית השקעות', isBrand: true },
+          { kw: 'מנורה פנסיה', vol: 2900, type: 'מותג / חברה', note: 'סקירת מנורה מבטחים פנסיה', isBrand: true },
+          { kw: 'מבטחים הותיקה', vol: 2900, type: 'מותג / חברה', note: 'בדיקת זכויות בקרן הוותיקה', isBrand: true },
+          { kw: 'מבטחים החדשה', vol: 2400, type: 'מותג / חברה', note: 'קרן הפנסיה של מנורה מבטחים', isBrand: true },
+          { kw: 'מנורה מבטחים פנסיה', vol: 1900, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אינפיניטי פנסיה', vol: 1900, type: 'מותג / חברה', note: 'סקירת קרן ברירת מחדל אינפיניטי', isBrand: true },
+          { kw: 'פנסיה הראל', vol: 1600, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אלטשולר שחם פנסיה', vol: 1300, type: 'מותג / חברה', note: 'סקירה והשוואת אלטשולר שחם', isBrand: true },
+          { kw: 'מבטחים פנסיה', vol: 880, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל קרן פנסיה', vol: 880, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'עתודות הותיקה', vol: 880, type: 'מותג / חברה', note: 'תכנון פרישה לקרן הוותיקה', isBrand: true },
+          { kw: 'קרן פנסיה הראל', vol: 720, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הפניקס פנסיה וגמל', vol: 720, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'פנסיה מנורה', vol: 720, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מור פנסיה וגמל', vol: 720, type: 'מותג / חברה', note: 'סקירת קרן הפנסיה של מור', isBrand: true },
+          { kw: 'כלל ביטוח פנסיה', vol: 590, type: 'מותג / חברה', note: 'סקירת קרן הפנסיה של כלל', isBrand: true },
+          { kw: 'מור קרן פנסיה', vol: 590, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אלטשולר פנסיה', vol: 480, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מיטב קרן פנסיה', vol: 480, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מקפת פנסיה', vol: 480, type: 'מותג / חברה', note: 'קרן מקפת של מגדל', isBrand: true },
+          { kw: 'איילון מיטב פנסיה', vol: 480, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'פנסיה הפניקס', vol: 480, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן מקפת', vol: 390, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן פנסיה מנורה', vol: 320, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה מבטחים פנסיה וגמל בע מ', vol: 320, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'פנסיה מגדל', vol: 320, type: 'מותג / חברה', note: 'סקירת מגדל מקפת', isBrand: true },
+          { kw: 'מור פנסיה מקיפה', vol: 320, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true }
+        ]
+      },
+      {
+        id: 'study',
+        title: '2. תחום קרנות השתלמות',
+        subtitle: 'קרנות השתלמות לעצמאים, השוואת תשואות ודמי ניהול, בתי השקעות וקרנות מגזריות',
+        keywords: [
+          { kw: 'קרנות השתלמות', vol: 33100, type: 'ביטוי ראשי', note: 'ביטוי עוגן מרכזי לתחום', isBrand: false },
+          { kw: 'השוואת קרנות השתלמות', vol: 2400, type: 'ביטוי זהב', note: 'לקוחות המשווים בין גופים לפני פתיחה או ניוד', isBrand: false },
+          { kw: 'תשואות קרנות השתלמות', vol: 2400, type: 'השוואה', note: 'בדיקת הגוף המרוויח ביותר', isBrand: false },
+          { kw: 'קרנות השתלמות לעצמאים', vol: 1300, type: 'ביטוי זהב', note: 'פתיחת קרנות לעצמאים לניצול הטבות מס', isBrand: false },
+          { kw: 'קרן השתלמות השוואה', vol: 880, type: 'השוואה', note: 'השוואה בין בתי השקעות', isBrand: false },
+          { kw: 'משיכת קרנות השתלמות', vol: 880, type: 'פעולה כספית', note: 'הזדמנות להציע הלוואה או ניוד במקום משיכה', isBrand: false },
+          { kw: 'גמל נט קרנות השתלמות', vol: 720, type: 'השוואה ומידע', note: 'בדיקת תשואות במערכת האוצר', isBrand: false },
+          { kw: 'קרנות השתלמות תשואות', vol: 590, type: 'השוואה', note: 'בדיקת תשואות', isBrand: false },
+          { kw: 'בדיקת קרנות השתלמות', vol: 480, type: 'ביטוי זהב', note: 'ליד ישיר לבדיקת הקרן הקיימת', isBrand: false },
+          { kw: 'דמי ניהול קרנות השתלמות', vol: 480, type: 'כוונת רכישה', note: 'לקוחות המחפשים להוזיל דמי ניהול', isBrand: false },
+          { kw: 'מנהל קרן השתלמות', vol: 480, type: 'מידע מקצועי', note: 'הסבר על אופן ניהול ההשקעות', isBrand: false },
+          { kw: 'מיי גמל נט השתלמות', vol: 390, type: 'השוואה ומידע', note: 'השוואת ביצועים', isBrand: false },
+          { kw: 'השוואת תשואות קרנות השתלמות', vol: 260, type: 'השוואה', note: 'השוואה ממוקדת לפי מסלולים', isBrand: false },
+          { kw: 'קרנות ההשתלמות', vol: 260, type: 'ביטוי ראשי', note: 'וריאציית חיפוש לעמוד הראשי', isBrand: false },
+          { kw: 'השוואת קרנות השתלמות משרד האוצר', vol: 210, type: 'השוואה ומידע', note: 'בדיקת נתונים רשמיים', isBrand: false },
+          { kw: 'ביצועי קרנות השתלמות', vol: 210, type: 'השוואה', note: 'בדיקת רווחים לאורך זמן', isBrand: false },
+          { kw: 'מיי גמל נט קרן השתלמות', vol: 210, type: 'השוואה ומידע', note: 'השוואת ביצועים', isBrand: false },
+          { kw: 'השוואת דמי ניהול קרן השתלמות', vol: 170, type: 'כוונת רכישה', note: 'הוזלת עלויות דרך הסוכנות', isBrand: false },
+          { kw: 'מיסוי על קרן השתלמות', vol: 170, type: 'תכנון מס', note: 'בירור תקרות פטור ממס רווחי הון', isBrand: false },
+          { kw: 'מיסוי קרנות השתלמות', vol: 170, type: 'תכנון מס', note: 'בירור תקרות פטור ממס רווחי הון', isBrand: false },
+          { kw: 'קרנות השתלמות דמי ניהול', vol: 170, type: 'כוונת רכישה', note: 'הוזלת עלויות', isBrand: false },
+          { kw: 'קרן השתלמות מומלצת', vol: 140, type: 'ביטוי זהב', note: 'כוונת הצטרפות גבוהה', isBrand: false },
+          { kw: 'דירוג קרנות השתלמות', vol: 140, type: 'השוואה', note: 'בחירת בית השקעות מוביל', isBrand: false },
+          { kw: 'קרן השתלמות גמל נט', vol: 140, type: 'השוואה ומידע', note: 'השוואת ביצועים', isBrand: false },
+          { kw: 'השוואה בין קרנות השתלמות', vol: 110, type: 'השוואה', note: 'השוואה לפני מעבר', isBrand: false },
+          { kw: 'תשואות קרנות השתלמות 10 שנים', vol: 110, type: 'השוואה', note: 'משקיעים הבוחנים יציבות לטווח ארוך', isBrand: false },
+          { kw: 'קרן השתלמות הכי טובה', vol: 90, type: 'ביטוי זהב', note: 'כוונת הצטרפות גבוהה', isBrand: false },
+          // Brands & Sectoral
+          { kw: 'קרן השתלמות לעובדי הוראה', vol: 18100, type: 'מותג / מגזר', note: 'פוטנציאל לניוד כספים נזילים לשוק החופשי', isBrand: true },
+          { kw: 'רום קרנות השתלמות', vol: 12100, type: 'מותג / מגזר', note: 'סקירת קרן רום מול בתי השקעות פרטיים', isBrand: true },
+          { kw: 'הראל קרנות השתלמות', vol: 5400, type: 'מותג / חברה', note: 'סקירת מסלולי הראל', isBrand: true },
+          { kw: 'עגור קרנות השתלמות', vol: 5400, type: 'מותג / מגזר', note: 'קרן עובדי הוראה ותיכונים', isBrand: true },
+          { kw: 'מור קרן השתלמות', vol: 4400, type: 'מותג / חברה', note: 'סקירת מסלולי מור בית השקעות', isBrand: true },
+          { kw: 'אנליסט קרנות השתלמות', vol: 4400, type: 'מותג / חברה', note: 'סקירת מסלולי אנליסט', isBrand: true },
+          { kw: 'כלל קרנות השתלמות', vol: 3600, type: 'מותג / חברה', note: 'סקירת מסלולי כלל', isBrand: true },
+          { kw: 'רעות קרנות השתלמות', vol: 2900, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרנות השתלמות הראל', vol: 2400, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הפניקס קרנות השתלמות', vol: 1900, type: 'מותג / חברה', note: 'סקירת מסלולי הפניקס', isBrand: true },
+          { kw: 'מגדל קרן השתלמות', vol: 1600, type: 'מותג / חברה', note: 'סקירת מסלולי מגדל', isBrand: true },
+          { kw: 'קרן השתלמות הסתדרות המורים', vol: 1600, type: 'מותג / מגזר', note: 'מדריך לזכויות וניוד כספים נזילים', isBrand: true },
+          { kw: 'קרן השתלמות מור', vol: 1300, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה קרנות השתלמות', vol: 1300, type: 'מותג / חברה', note: 'סקירת מסלולי מנורה מבטחים', isBrand: true },
+          { kw: 'מיטב קרן השתלמות', vol: 1000, type: 'מותג / חברה', note: 'סקירת מסלולי מיטב', isBrand: true },
+          { kw: 'קרנות השתלמות עגור', vol: 880, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אלטשולר שחם קרן השתלמות', vol: 720, type: 'מותג / חברה', note: 'סקירת אלטשולר שחם', isBrand: true },
+          { kw: 'אקסלנס קרן השתלמות', vol: 720, type: 'מותג / חברה', note: 'סקירת הפניקס אקסלנס', isBrand: true },
+          { kw: 'קרן השתלמות כלל', vol: 720, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות למורים וגננות', vol: 720, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מיטב דש קרנות השתלמות', vol: 720, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות אלטשולר שחם', vol: 590, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'דש קרן השתלמות', vol: 590, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות מגדל', vol: 480, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'משיכת קרן השתלמות למורים', vol: 480, type: 'מותג / מגזר', note: 'מדריך לפדיון או ניוד לאחר 6 שנים', isBrand: true },
+          { kw: 'קרן השתלמות מינהל', vol: 480, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אינפיניטי קרן השתלמות', vol: 480, type: 'מותג / חברה', note: 'סקירת מסלולי אינפיניטי', isBrand: true },
+          { kw: 'קרנות השתלמות משרד החינוך', vol: 480, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות מיטב דש', vol: 390, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'עמי קרנות השתלמות', vol: 390, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרנות השתלמות ארגון המורים', vol: 390, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרנות השתלמות הבינלאומי', vol: 390, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות אקסלנס', vol: 320, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה מבטחים קרנות השתלמות', vol: 320, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'עגור קרן השתלמות למורים', vol: 320, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות אחים ואחיות', vol: 260, type: 'מותג / מגזר', note: 'סקירה לצוותים רפואיים', isBrand: true },
+          { kw: 'הסתדרות המורים קרן השתלמות', vol: 260, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות המחר', vol: 260, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אלטשולר קרן השתלמות', vol: 210, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הבינלאומי קרנות השתלמות', vol: 170, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרנות השתלמות מנורה מבטחים', vol: 170, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הבנק הבינלאומי קרנות השתלמות', vol: 140, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'פסגות קרנות השתלמות', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות אינפיניטי', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות שופטים', vol: 140, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן מור השתלמות', vol: 110, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'גל קרנות השתלמות', vol: 110, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'יהב קרנות השתלמות', vol: 110, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות המורים', vol: 110, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות לעובדי חברת החשמל', vol: 110, type: 'מותג / מגזר', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'בדיקת קרן השתלמות הפניקס', vol: 90, type: 'מותג / חברה', note: 'בדיקת תיק קיים בהפניקס', isBrand: true },
+          { kw: 'קרן השתלמות דש', vol: 90, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קרן השתלמות אלטשולר', vol: 90, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true }
+        ]
+      },
+      {
+        id: 'gemel',
+        title: '3. תחום קופת גמל להשקעה וקופות גמל',
+        subtitle: 'פתיחת קופת גמל להשקעה, חיסכון לילדים, השוואה מול פוליסת חיסכון וסקירת בתי השקעות',
+        keywords: [
+          { kw: 'קופת גמל להשקעה', vol: 12100, type: 'ביטוי ראשי', note: 'ביטוי עוגן מרכזי לתחום', isBrand: false },
+          { kw: 'גמל להשקעה', vol: 2400, type: 'ביטוי ראשי', note: 'ביטוי עוגן משני', isBrand: false },
+          { kw: 'קופת גמל להשקעה תשואות', vol: 880, type: 'השוואה', note: 'טבלת השוואת רווחים בין הגופים', isBrand: false },
+          { kw: 'מחשבון קופת גמל להשקעה', vol: 720, type: 'כלי / מחשבון', note: 'סימולטור ריבית דריבית להמרת גולשים', isBrand: false },
+          { kw: 'פתיחת קופת גמל להשקעה', vol: 390, type: 'ביטוי זהב', note: 'כוונת הצטרפות והפקדה מיידית', isBrand: false },
+          { kw: 'קופת גמל להשקעה מומלצת', vol: 390, type: 'ביטוי זהב', note: 'צמיחה של 320% בחיפושים – שלב בחירת הגוף', isBrand: false },
+          { kw: 'דמי ניהול קופת גמל להשקעה', vol: 390, type: 'כוונת רכישה', note: 'בדיקת עלויות והטבות דרך סוכן', isBrand: false },
+          { kw: 'דמי ניהול קופת גמל להשקעה השוואה', vol: 390, type: 'השוואה', note: 'השוואת תנאים בין בתי השקעות', isBrand: false },
+          { kw: 'קרן גמל להשקעה', vol: 320, type: 'ביטוי ראשי', note: 'וריאציית חיפוש נפוצה', isBrand: false },
+          { kw: 'קופת גמל להשקעה דמי ניהול', vol: 320, type: 'כוונת רכישה', note: 'בדיקת עלויות', isBrand: false },
+          { kw: 'מה זה קופת גמל להשקעה', vol: 320, type: 'מידע והסבר', note: 'מענה למתחילים בעמוד הראשי', isBrand: false },
+          { kw: 'קופת גמל להשקעה חסרונות', vol: 260, type: 'ביטוי זהב', note: 'מתלבטים לפני הפקדה – הזדמנות להציע גם פוליסת חיסכון', isBrand: false },
+          { kw: 'השוואה גמל להשקעה', vol: 260, type: 'השוואה', note: 'השוואת בתי השקעות', isBrand: false },
+          { kw: 'הפקדה לקופת גמל להשקעה', vol: 210, type: 'כוונת רכישה', note: 'לקוחות המעוניינים להפקיד כסף פנוי', isBrand: false },
+          { kw: 'מחשבון גמל להשקעה', vol: 210, type: 'כלי / מחשבון', note: 'כלי חישוב צבירה', isBrand: false },
+          { kw: 'מה ההבדל בין קופת גמל לקופת גמל להשקעה', vol: 210, type: 'מידע והסבר', note: 'מאמר השוואה בין חיסכון פנסיוני לנזיל', isBrand: false },
+          { kw: 'קופת גמל להשקעה לילדים', vol: 170, type: 'ביטוי זהב', note: 'נישה רווחית – הורים וסבים הפותחים חיסכון לילדים', isBrand: false },
+          { kw: 'גמל השקעה', vol: 170, type: 'ביטוי ראשי', note: 'וריאציית חיפוש', isBrand: false },
+          { kw: 'מיי גמל נט קופות גמל', vol: 170, type: 'השוואה ומידע', note: 'השוואת קופות', isBrand: false },
+          { kw: 'ניוד קופת גמל להשקעה', vol: 90, type: 'ביטוי זהב', note: 'העברת קופה קיימת לניהול הסוכנות ללא אירוע מס', isBrand: false },
+          { kw: 'השקעה בקופת גמל', vol: 90, type: 'כוונת רכישה', note: 'חיפוש אפיק השקעה', isBrand: false },
+          { kw: 'קופת גמל להשקעה מסלולים', vol: 90, type: 'השוואה', note: 'בחירת מסלול מניות / S&P 500 / כללי', isBrand: false },
+          { kw: 'קופת גמל להשקעה מה זה', vol: 90, type: 'מידע והסבר', note: 'מידע כללי', isBrand: false },
+          { kw: 'קופת גמל להשקעה יתרונות וחסרונות', vol: 90, type: 'ביטוי זהב', note: 'שלב קבלת החלטה לפני פתיחת קופה', isBrand: false },
+          { kw: 'גמל להשקעה תקרה', vol: 90, type: 'מידע ורגולציה', note: 'משקיעים בסכומים גבוהים הבודקים את תקרת ההפקדה השנתית', isBrand: false },
+          { kw: 'כמה אפשר להפקיד לקופת גמל להשקעה', vol: 90, type: 'מידע ורגולציה', note: 'בדיקת תקרת הפקדה שנתית (כ-79,000+ ש"ח לאדם)', isBrand: false },
+          { kw: 'מקסימום הפקדה לקופת גמל להשקעה', vol: 90, type: 'מידע ורגולציה', note: 'משקיעים בסכומים גבוהים', isBrand: false },
+          { kw: 'תקרה קופת גמל להשקעה', vol: 90, type: 'מידע ורגולציה', note: 'משקיעים בסכומים גבוהים', isBrand: false },
+          { kw: 'קופות גמל להשקעה השוואת דמי ניהול', vol: 90, type: 'השוואה', note: 'השוואת תנאים', isBrand: false },
+          { kw: 'פוליסת חיסכון או קופת גמל להשקעה', vol: 70, type: 'ביטוי זהב', note: 'צומת החלטה קלאסי לליווי של סוכן ביטוח', isBrand: false },
+          { kw: 'מה ההבדל בין פוליסת חיסכון לקופת גמל להשקעה', vol: 70, type: 'השוואה', note: 'מאמר השוואה בין שני המוצרים', isBrand: false },
+          { kw: 'קרן השתלמות להשקעה', vol: 70, type: 'מידע והסבר', note: 'הסבר על ההבדל בין המוצרים', isBrand: false },
+          { kw: 'קופת גמל להשקעה מחשבון', vol: 70, type: 'כלי / מחשבון', note: 'כלי חישוב', isBrand: false },
+          { kw: 'דמי ניהול גמל להשקעה', vol: 70, type: 'כוונת רכישה', note: 'הוזלת עלויות', isBrand: false },
+          { kw: 'מהי קופת גמל להשקעה', vol: 70, type: 'מידע והסבר', note: 'מידע כללי', isBrand: false },
+          { kw: 'קופת גמל להשקעה מס', vol: 70, type: 'תכנון מס', note: 'הסבר על מס רווחי הון ופטור בקצבה מגיל 60', isBrand: false },
+          { kw: 'פתיחת קופת גמל להשקעה לילדים', vol: 50, type: 'ביטוי זהב', note: 'פעולת הצטרפות ישירה לחיסכון לילדים', isBrand: false },
+          // Brands
+          { kw: 'מור גמל להשקעה', vol: 4400, type: 'מותג / חברה', note: 'סקירת ביצועי מור גמל להשקעה', isBrand: true },
+          { kw: 'הראל גמל', vol: 1600, type: 'מותג / חברה', note: 'סקירת קופות הגמל של הראל', isBrand: true },
+          { kw: 'מור קופת גמל להשקעה', vol: 1300, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מיטב קופת גמל להשקעה', vol: 880, type: 'מותג / חברה', note: 'סקירת מסלולי מיטב', isBrand: true },
+          { kw: 'מיטב גמל להשקעה', vol: 720, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הפניקס גמל להשקעה', vol: 720, type: 'מותג / חברה', note: 'סקירת מסלולי הפניקס', isBrand: true },
+          { kw: 'הפניקס קופת גמל להשקעה', vol: 590, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'כלל גמל להשקעה', vol: 590, type: 'מותג / חברה', note: 'סקירת מסלולי כלל', isBrand: true },
+          { kw: 'מיטב דש קופת גמל להשקעה', vol: 480, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אלטשולר שחם קופת גמל להשקעה', vol: 390, type: 'מותג / חברה', note: 'סקירת אלטשולר שחם', isBrand: true },
+          { kw: 'כלל קופת גמל להשקעה', vol: 390, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'גמל להשקעה הראל', vol: 390, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל גמל להשקעה מניות', vol: 390, type: 'מותג / חברה', note: 'סקירת מסלול המניות של הראל', isBrand: true },
+          { kw: 'מנורה קופת גמל', vol: 390, type: 'מותג / חברה', note: 'סקירת קופות מנורה מבטחים', isBrand: true },
+          { kw: 'קופת גמל להשקעה מור', vol: 320, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מגדל קופת גמל להשקעה', vol: 320, type: 'מותג / חברה', note: 'סקירת מסלולי מגדל', isBrand: true },
+          { kw: 'מגדל גמל להשקעה', vol: 320, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה הפניקס', vol: 260, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה מיטב', vol: 210, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה אנליסט', vol: 210, type: 'מותג / חברה', note: 'סקירת מסלולי אנליסט', isBrand: true },
+          { kw: 'קופות גמל להשקעה אנליסט', vol: 210, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה מיטב דש', vol: 170, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה קופת גמל להשקעה', vol: 170, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה גמל להשקעה', vol: 170, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה כלל', vol: 170, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל גמל להשקעה מסלולים', vol: 170, type: 'מותג / חברה', note: 'סקירת מסלולי הראל', isBrand: true },
+          { kw: 'מיטב דש גמל להשקעה', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אלטשולר שחם גמל להשקעה', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'גמל להשקעה הפניקס', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה מגדל', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה אלטשולר', vol: 110, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מיטב דש קופת גמל להשקעה תשואות', vol: 110, type: 'מותג / חברה', note: 'סקירת תשואות מיטב', isBrand: true },
+          { kw: 'כלל גמל לעתיד', vol: 110, type: 'מותג / חברה', note: 'מוצר החיסכון של כלל', isBrand: true },
+          { kw: 'קופת גמל להשקעה מנורה', vol: 90, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'גמל להשקעה מור', vol: 90, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מיטב דש גמל להשקעה מסלולים', vol: 90, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל גמל להשקעה כללי', vol: 90, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה מבטחים קופת גמל להשקעה', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל קופת גמל להשקעה תשואות', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אלטשולר גמל להשקעה', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'אקסלנס גמל להשקעה', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'קופת גמל להשקעה אלטשולר שחם', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'גמל להשקעה מגדל', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל קופת גמל להשקעה מסלולים', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה מבטחים גמל להשקעה', vol: 50, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true }
+        ]
+      },
+      {
+        id: 'tikun190',
+        title: '4. תחום תיקון 190 (גיל השלישי ופרישה)',
+        subtitle: 'קהל יעד בעל הון פנוי גבוה המחפש הטבות מס, קצבה פטורה ותכנון הורשה',
+        keywords: [
+          { kw: 'תיקון 190', vol: 1300, type: 'ביטוי ראשי', note: 'ביטוי עוגן מרכזי – קהל עם הון פנוי גבוה', isBrand: false },
+          { kw: 'תיקון 190 לפקודת מס הכנסה', vol: 320, type: 'ביטוי ראשי', note: 'חיפוש רשמי לשילוב בעמוד השירות', isBrand: false },
+          { kw: 'תיקון 190 חסרונות', vol: 260, type: 'ביטוי זהב', note: 'לקוחות רגע לפני הפקדה המחפשים ייעוץ אובייקטיבי', isBrand: false },
+          { kw: 'קופת גמל תיקון 190', vol: 170, type: 'כוונת רכישה', note: 'חיפוש המוצר עצמו', isBrand: false },
+          { kw: 'תיקון 190 פנסיוני', vol: 140, type: 'כוונת רכישה', note: 'חיפוש מקצועי ממוקד', isBrand: false },
+          { kw: 'מה זה תיקון 190', vol: 140, type: 'מידע והסבר', note: 'שאלות ותשובות בעמוד הראשי', isBrand: false },
+          { kw: 'תיקון 190 קופת גמל', vol: 110, type: 'כוונת רכישה', note: 'חיפוש המוצר (צמיחה של 425%)', isBrand: false },
+          { kw: 'תיקון 190 הסבר', vol: 70, type: 'מידע והסבר', note: 'מדריך מקיף למתחילים', isBrand: false },
+          { kw: 'קופת גמל לפי תיקון 190', vol: 50, type: 'כוונת רכישה', note: 'חיפוש המוצר', isBrand: false },
+          { kw: 'סעיף 190', vol: 50, type: 'מידע והסבר', note: 'וריאציית חיפוש', isBrand: false },
+          { kw: 'מהו תיקון 190', vol: 50, type: 'מידע והסבר', note: 'וריאציית חיפוש', isBrand: false },
+          { kw: 'סעיף 190 לפקודת מס הכנסה', vol: 50, type: 'מידע והסבר', note: 'וריאציית חיפוש', isBrand: false },
+          { kw: 'תקנה 190 מס הכנסה', vol: 50, type: 'מידע והסבר', note: 'וריאציית חיפוש', isBrand: false },
+          { kw: 'מחשבון תיקון 190', vol: 40, type: 'כלי / מחשבון', note: 'סימולטור חיסכון במס רווחי הון', isBrand: false },
+          { kw: 'תיקון 190 כספי נפטר', vol: 40, type: 'ביטוי זהב', note: 'תכנון ירושה והעברה בין-דורית ללקוחות אמידים', isBrand: false },
+          { kw: 'תיקון 190 תקנה 125 ד סעיף 9 א', vol: 30, type: 'ביטוי זהב', note: 'השוואה מול פוליסת חיסכון לגמלאים (סעיף 125ד)', isBrand: false },
+          { kw: 'קצבה מזכה תיקון 190', vol: 30, type: 'תכנון פרישה', note: 'בדיקת תנאי הסף של קצבה מינימלית', isBrand: false },
+          { kw: 'מה זה תיקון 190 לפקודת מס הכנסה', vol: 30, type: 'מידע והסבר', note: 'שאלת מידע', isBrand: false },
+          { kw: 'תיקון 190 מס הכנסה', vol: 20, type: 'תכנון מס', note: 'היבטי מיסוי', isBrand: false },
+          { kw: 'חוק 190 לגמלאים', vol: 20, type: 'כוונת רכישה', note: 'חיפוש ממוקד לפי קהל יעד', isBrand: false },
+          { kw: 'תיקון 190 סעיף 9א', vol: 20, type: 'תכנון פרישה', note: 'פטור ממס על קצבה', isBrand: false },
+          { kw: 'הטבות מס תיקון 190', vol: 20, type: 'כוונת רכישה', note: 'בחינת כדאיות הטבות המס', isBrand: false },
+          { kw: 'הטבת מס תיקון 190', vol: 20, type: 'כוונת רכישה', note: 'בחינת כדאיות הטבות המס', isBrand: false },
+          { kw: 'היוון קצבה מוכרת', vol: 20, type: 'תכנון פרישה', note: 'משיכה חד-פעמית במס 15% נומינלי', isBrand: false },
+          { kw: 'חוק 190', vol: 20, type: 'מידע והסבר', note: 'וריאציית חיפוש עממית', isBrand: false }
+        ]
+      },
+      {
+        id: 'mortgage',
+        title: '5. תחום ביטוחי משכנתא (חיים ומבנה)',
+        subtitle: 'תחום בעל כוונת רכישה מיידית לחילוץ מבוטחים מהפוליסות היקרות של הבנקים',
+        keywords: [
+          { kw: 'ביטוחי משכנתא', vol: 1000, type: 'ביטוי ראשי', note: 'רוכשי דירות וממחזרי משכנתא (עלות לקליק גבוהה מאוד בגוגל)', isBrand: false },
+          { kw: 'ביטוחי חיים למשכנתא', vol: 1000, type: 'ביטוי זהב', note: 'כוונת רכישה ממוקדת לביטוח חיים למשכנתא', isBrand: false },
+          { kw: 'השוואת ביטוחי משכנתא', vol: 170, type: 'ביטוי זהב', note: 'לקוחות שקיבלו הצעה יקרה מהבנק ומחפשים הוזלה אצל סוכן', isBrand: false }
+        ]
+      },
+      {
+        id: 'illness',
+        title: '6. תחום ביטוח מחלות קשות',
+        subtitle: 'השוואת פוליסות, בדיקת עלויות וסקירת מוצרי הדגל של חברות הביטוח ("מענקית זהב", "קרן אור טופ")',
+        keywords: [
+          { kw: 'ביטוח מחלות קשות', vol: 480, type: 'ביטוי ראשי', note: 'עמוד שירות מרכזי לרכישת פוליסה', isBrand: false },
+          { kw: 'מחלות קשות', vol: 210, type: 'ביטוי ראשי', note: 'ביטוי משני לעמוד הראשי', isBrand: false },
+          { kw: 'ביטוח מחלות קשות השוואה', vol: 140, type: 'ביטוי זהב', note: 'לקוחות המשווים בין חברות לפני סגירה', isBrand: false },
+          { kw: 'ביטוח מחלות קשות האם כדאי', vol: 70, type: 'ביטוי זהב', note: 'מתלבטים הזקוקים להכוונה של סוכן ביטוח', isBrand: false },
+          { kw: 'רשימת מחלות קשות הראל', vol: 70, type: 'השוואה ומידע', note: 'בדיקת תנאי הפוליסה ורשימת המחלות המכוסות', isBrand: false },
+          { kw: 'השוואת ביטוח מחלות קשות', vol: 50, type: 'ביטוי זהב', note: 'השוואה לפני רכישה', isBrand: false },
+          { kw: 'ביטוח מחלות קשות מחיר', vol: 30, type: 'כוונת רכישה', note: 'בירור פרמיות לפי גיל', isBrand: false },
+          { kw: 'פוליסת מחלות קשות', vol: 30, type: 'כוונת רכישה', note: 'חיפוש המוצר', isBrand: false },
+          // Brands
+          { kw: 'הפניקס מחלות קשות', vol: 140, type: 'מותג / חברה', note: 'סקירת פוליסת הפניקס', isBrand: true },
+          { kw: 'מחלות קשות מנורה', vol: 140, type: 'מותג / חברה', note: 'סקירת פוליסת מנורה מבטחים', isBrand: true },
+          { kw: 'מחלות קשות הראל', vol: 140, type: 'מותג / חברה', note: 'סקירת פוליסת הראל', isBrand: true },
+          { kw: 'מחלות קשות כלל', vol: 140, type: 'מותג / חברה', note: 'סקירת פוליסת כלל', isBrand: true },
+          { kw: 'מנורה מחלות קשות', vol: 110, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'כלל מחלות קשות', vol: 110, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מחלות קשות הפניקס', vol: 110, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל מחלות קשות', vol: 110, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מגדל מחלות קשות', vol: 90, type: 'מותג / חברה', note: 'סקירת פוליסת מגדל', isBrand: true },
+          { kw: 'מענקית זהב הראל', vol: 90, type: 'מותג / פוליסה', note: 'חיפוש ממוקד של שם הפוליסה של הראל', isBrand: true },
+          { kw: 'ביטוח מחלות קשות הראל', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מחלות קשות מגדל', vol: 70, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח מחלות קשות הפניקס', vol: 50, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח ישיר מחלות קשות', vol: 50, type: 'מותג / חברה', note: 'מאמר: יתרון סוכן אישי מול חברה ישירה', isBrand: true },
+          { kw: 'כלל ביטוח מחלות קשות', vol: 50, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'איילון מחלות קשות', vol: 50, type: 'מותג / חברה', note: 'סקירת פוליסת איילון', isBrand: true },
+          { kw: 'מחלות קשות איילון', vol: 50, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הפניקס ביטוח מחלות קשות', vol: 40, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח מחלות קשות מנורה', vol: 40, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל ביטוח מחלות קשות', vol: 40, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח מחלות קשות כלל', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מחלות קשות ביטוח ישיר', vol: 30, type: 'מותג / חברה', note: 'השוואת תנאים מול סוכן', isBrand: true },
+          { kw: 'ביטוח מחלות קשות מגדל', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מנורה ביטוח מחלות קשות', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל מענקית זהב', vol: 30, type: 'מותג / פוליסה', note: 'שם הפוליסה של הראל', isBrand: true },
+          { kw: 'מנורה קרן אור טופ', vol: 30, type: 'מותג / פוליסה', note: 'חיפוש ממוקד של שם הפוליסה של מנורה', isBrand: true }
+        ]
+      },
+      {
+        id: 'accident',
+        title: '7. תחום ביטוח תאונות אישיות',
+        subtitle: 'פוליסות תאונות אישיות פרטיות (ללא חיפושי סרק של ביטוח תלמידים עירוני) והשוואה מול חברות ישירות',
+        keywords: [
+          { kw: 'ביטוח תאונות אישיות', vol: 1000, type: 'ביטוי ראשי', note: 'עמוד שירות ראשי', isBrand: false },
+          { kw: 'תאונות אישיות', vol: 320, type: 'ביטוי ראשי', note: 'ביטוי משני לעמוד השירות', isBrand: false },
+          { kw: 'ביטוח תאונות אישיות מחיר', vol: 90, type: 'ביטוי זהב', note: 'כוונת רכישה ובדיקת עלויות', isBrand: false },
+          { kw: 'מה מכסה ביטוח תאונות אישיות', vol: 50, type: 'מידע והסבר', note: 'פירוט כיסויים (שברים, כוויות, אובדן כושר עבודה)', isBrand: false },
+          { kw: 'מה זה ביטוח תאונות אישיות', vol: 50, type: 'מידע והסבר', note: 'שאלות ותשובות בעמוד הראשי', isBrand: false },
+          { kw: 'ביטוח תאונות אישיות האם כדאי', vol: 40, type: 'ביטוי זהב', note: 'מענה למתלבטים ובדיקת כפל ביטוחי', isBrand: false },
+          { kw: 'פוליסת תאונות אישיות', vol: 40, type: 'כוונת רכישה', note: 'חיפוש המוצר', isBrand: false },
+          { kw: 'ביטוח תאונות', vol: 30, type: 'כוונת רכישה', note: 'וריאציית חיפוש', isBrand: false },
+          { kw: 'ביטוח תאונות אישיות לילדים', vol: 30, type: 'ביטוי זהב', note: 'צמיחה של 300% – כיסוי פרטי משלים לילדים', isBrand: false },
+          { kw: 'כמה עולה ביטוח תאונות אישיות', vol: 30, type: 'כוונת רכישה', note: 'בדיקת מחיר', isBrand: false },
+          // Brands
+          { kw: 'תאונות אישיות הראל', vol: 170, type: 'מותג / חברה', note: 'סקירת פוליסת הראל', isBrand: true },
+          { kw: 'הראל ביטוח תאונות אישיות', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח תאונות אישיות הראל', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הראל תאונות אישיות', vol: 140, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח ישיר תאונות אישיות', vol: 90, type: 'מותג / חברה', note: 'הדגשת ליווי סוכן אישי בתביעה מול ביטוח ישיר', isBrand: true },
+          { kw: 'ביטוח תאונות אישיות aig', vol: 50, type: 'מותג / חברה', note: 'הדגשת ליווי סוכן אישי מול AIG', isBrand: true },
+          { kw: 'aig תאונות אישיות', vol: 50, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הפניקס תאונות אישיות', vol: 50, type: 'מותג / חברה', note: 'סקירת פוליסת הפניקס', isBrand: true },
+          { kw: 'איילון ביטוח תאונות אישיות', vol: 50, type: 'מותג / חברה', note: 'סקירת פוליסת איילון', isBrand: true },
+          { kw: 'כלל תאונות אישיות', vol: 50, type: 'מותג / חברה', note: 'סקירת פוליסת כלל', isBrand: true },
+          { kw: 'איילון תאונות אישיות', vol: 50, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'aig ביטוח תאונות אישיות', vol: 40, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'תאונות אישיות aig', vol: 40, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'מגדל תאונות אישיות', vol: 40, type: 'מותג / חברה', note: 'סקירת פוליסת מגדל', isBrand: true },
+          { kw: 'תאונות אישיות כלל', vol: 40, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'הפניקס ביטוח תאונות אישיות', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח תאונות אישיות הפניקס', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'כלל ביטוח תאונות אישיות', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח תאונות אישיות כלל', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true },
+          { kw: 'ביטוח תאונות אישיות מגדל', vol: 30, type: 'מותג / חברה', note: 'סקירה והשוואה', isBrand: true }
+        ]
+      }
+    ];
+
+    let activeCategory = 'all';
+
+    function getBadgeStyle(type) {
+      if (type === 'ביטוי זהב') return 'bg-amber-100 text-amber-800 border-amber-300 font-bold';
+      if (type === 'ביטוי ראשי') return 'bg-blue-100 text-blue-800 border-blue-300 font-bold';
+      if (type === 'כוונת רכישה') return 'bg-emerald-100 text-emerald-800 border-emerald-300 font-semibold';
+      if (type.includes('מותג')) return 'bg-purple-50 text-purple-700 border-purple-200';
+      return 'bg-slate-100 text-slate-700 border-slate-200';
+    }
+
+    function setCategory(catId) {
+      activeCategory = catId;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.dataset.cat === catId) {
+          btn.className = 'cat-btn bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition shadow-sm';
+        } else {
+          btn.className = 'cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition';
+        }
+      });
+      renderReport();
+    }
+
+    function renderReport() {
+      const container = document.getElementById('reportContainer');
+      const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+      const showBrands = document.getElementById('showBrandsToggle').checked;
+      container.innerHTML = '';
+
+      let totalRendered = 0;
+
+      reportData.forEach(section => {
+        if (activeCategory !== 'all' && activeCategory !== section.id) return;
+
+        const filteredKeywords = section.keywords.filter(item => {
+          if (!showBrands && item.isBrand) return false;
+          if (searchQuery && !item.kw.toLowerCase().includes(searchQuery) && !item.note.toLowerCase().includes(searchQuery)) return false;
+          return true;
+        });
+
+        if (filteredKeywords.length === 0) return;
+
+        totalRendered += filteredKeywords.length;
+        const maxVol = Math.max(...filteredKeywords.map(k => k.vol), 100);
+        const sectionSum = filteredKeywords.reduce((acc, cur) => acc + cur.vol, 0);
+
+        const sectionEl = document.createElement('section');
+        sectionEl.className = 'bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-break';
+        sectionEl.innerHTML = `
+          <div class="px-6 py-5 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <h2 class="text-lg font-extrabold">${section.title}</h2>
+              <p class="text-xs text-slate-300 mt-0.5">${section.subtitle}</p>
+            </div>
+            <div class="flex items-center gap-3 self-start sm:self-center">
+              <span class="bg-slate-800 border border-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium">
+                ${filteredKeywords.length} ביטויים
+              </span>
+              <span class="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs px-3 py-1.5 rounded-lg font-bold">
+                ${sectionSum.toLocaleString()} חיפושים בחודש
+              </span>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
+                  <th class="py-3 px-6 font-bold w-1/3">מילת חיפוש בגוגל</th>
+                  <th class="py-3 px-6 font-bold w-48">נפח חיפוש חודשי</th>
+                  <th class="py-3 px-6 font-bold w-40">סיווג שיווקי</th>
+                  <th class="py-3 px-6 font-bold">משמעות עסקית / ייעוד באתר</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-sm">
+                ${filteredKeywords.map(item => {
+                  const barWidth = Math.max(6, Math.round((item.vol / maxVol) * 100));
+                  return `
+                    <tr class="hover:bg-blue-50/40 transition">
+                      <td class="py-3 px-6 font-bold text-slate-900">${item.kw}</td>
+                      <td class="py-3 px-6">
+                        <div class="flex items-center gap-3">
+                          <span class="font-extrabold text-slate-800 w-16">${item.vol.toLocaleString()}</span>
+                          <div class="w-24 bg-slate-100 h-2 rounded-full overflow-hidden hidden sm:block">
+                            <div class="bg-blue-600 h-full rounded-full" style="width: ${barWidth}%"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="py-3 px-6">
+                        <span class="inline-block text-xs px-2.5 py-1 rounded-md border ${getBadgeStyle(item.type)}">
+                          ${item.type}
+                        </span>
+                      </td>
+                      <td class="py-3 px-6 text-slate-600">${item.note}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+        container.appendChild(sectionEl);
+      });
+
+      document.getElementById('total-kw-count').textContent = totalRendered;
+    }
+
+    function exportCSV() {
+      let csvContent = "\uFEFFתחום,מילת חיפוש בגוגל,נפח חיפוש חודשי,סיווג שיווקי,משמעות עסקית\n";
+      reportData.forEach(section => {
+        section.keywords.forEach(item => {
+          const cleanTitle = section.title.replace(/,/g, ' ');
+          const cleanKw = item.kw.replace(/,/g, ' ');
+          const cleanNote = item.note.replace(/,/g, ' ');
+          csvContent += `"${cleanTitle}","${cleanKw}",${item.vol},"${item.type}","${cleanNote}"\n`;
+        });
+      });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "insurance-keyword-research.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', renderReport);
+  </script>
+</body>
+</html>
