@@ -18,6 +18,27 @@
       .print-break { page-break-inside: avoid; }
       .shadow-sm, .shadow-md { box-shadow: none !important; border: 1px solid #e2e8f0 !important; }
     }
+    #seoPanel {
+      transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    #seoPanel.panel-open {
+      transform: translateX(0) !important;
+    }
+    .seo-row-btn {
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .seo-notification {
+      animation: slideDown 0.3s ease, fadeOut 0.4s ease 2.6s forwards;
+    }
+    @keyframes slideDown {
+      from { opacity:0; transform: translateY(-10px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      to { opacity:0; transform: translateY(-6px); }
+    }
+    .seo-kw-item:hover .seo-remove-btn { opacity: 1; }
+    .seo-remove-btn { opacity: 0; transition: opacity 0.15s; }
   </style>
 </head>
 <body class="min-h-screen pb-16">
@@ -39,6 +60,11 @@
         <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
           הדפסה / שמירה כ-PDF
+        </button>
+        <button onclick="toggleSEOPanel()" class="relative bg-amber-500 hover:bg-amber-400 text-white text-sm font-bold px-4 py-2.5 rounded-lg transition flex items-center gap-2 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          רשימת SEO
+          <span id="seoHeaderBadge" class="bg-white text-amber-600 text-xs font-extrabold px-1.5 py-0.5 rounded-full leading-none">50/50</span>
         </button>
       </div>
     </div>
@@ -146,7 +172,11 @@
 
       <!-- Category Pills -->
       <div class="flex flex-wrap gap-2" id="categoryPills">
-        <button onclick="setCategory('all')" data-cat="all" class="cat-btn bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition">הכל</button>
+        <button onclick="setCategory('all')" data-cat="all" class="cat-btn bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition shadow-sm">הכל</button>
+        <button onclick="setCategory('seo')" data-cat="seo" class="cat-btn bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5 fill-amber-500 text-amber-600" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          50 מילות SEO הנבחרות
+        </button>
         <button onclick="setCategory('pension')" data-cat="pension" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">1. פנסיה ופרישה</button>
         <button onclick="setCategory('study')" data-cat="study" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">2. קרנות השתלמות</button>
         <button onclick="setCategory('gemel')" data-cat="gemel" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition">3. גמל להשקעה</button>
@@ -561,9 +591,17 @@
       activeCategory = catId;
       document.querySelectorAll('.cat-btn').forEach(btn => {
         if (btn.dataset.cat === catId) {
-          btn.className = 'cat-btn bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition shadow-sm';
+          if (catId === 'seo') {
+            btn.className = 'cat-btn bg-amber-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition shadow-sm ring-2 ring-amber-400 flex items-center gap-1.5';
+          } else {
+            btn.className = 'cat-btn bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5';
+          }
         } else {
-          btn.className = 'cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition';
+          if (btn.dataset.cat === 'seo') {
+            btn.className = 'cat-btn bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm';
+          } else {
+            btn.className = 'cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg transition';
+          }
         }
       });
       renderReport();
@@ -578,9 +616,10 @@
       let totalRendered = 0;
 
       reportData.forEach(section => {
-        if (activeCategory !== 'all' && activeCategory !== section.id) return;
+        if (activeCategory !== 'all' && activeCategory !== 'seo' && activeCategory !== section.id) return;
 
         const filteredKeywords = section.keywords.filter(item => {
+          if (activeCategory === 'seo' && !isInSEO(item.kw)) return false;
           if (!showBrands && item.isBrand) return false;
           if (searchQuery && !item.kw.toLowerCase().includes(searchQuery) && !item.note.toLowerCase().includes(searchQuery)) return false;
           return true;
@@ -613,7 +652,12 @@
             <table class="w-full text-right border-collapse">
               <thead>
                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
-                  <th class="py-3 px-6 font-bold w-1/3">מילת חיפוש בגוגל</th>
+                  <th class="py-3 px-6 font-bold w-1/3">
+                    <div class="flex items-center gap-2">
+                      <span class="text-amber-500">⭐ SEO</span>
+                      <span>מילת חיפוש בגוגל</span>
+                    </div>
+                  </th>
                   <th class="py-3 px-6 font-bold w-48">נפח חיפוש חודשי</th>
                   <th class="py-3 px-6 font-bold w-40">סיווג שיווקי</th>
                   <th class="py-3 px-6 font-bold">משמעות עסקית / ייעוד באתר</th>
@@ -622,9 +666,19 @@
               <tbody class="divide-y divide-slate-100 text-sm">
                 ${filteredKeywords.map(item => {
                   const barWidth = Math.max(6, Math.round((item.vol / maxVol) * 100));
+                  const inSEO = isInSEO(item.kw);
                   return `
-                    <tr class="hover:bg-blue-50/40 transition">
-                      <td class="py-3 px-6 font-bold text-slate-900">${item.kw}</td>
+                    <tr class="hover:bg-blue-50/40 transition ${inSEO ? 'bg-amber-50/40' : ''}">
+                      <td class="py-3 px-6 font-bold text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                          <button onclick="toggleKwSEO(this)" data-kw="${item.kw.replace(/"/g, '&quot;')}" data-cat="${section.title.replace(/"/g, '&quot;')}" title="${inSEO ? 'הסר מרשימת 50 מילות SEO' : 'הוסף לרשימת 50 מילות SEO'}" class="p-1 rounded hover:bg-amber-100/70 transition flex-shrink-0 ${inSEO ? 'text-amber-500' : 'text-slate-300 hover:text-amber-400'}">
+                            <svg class="w-4 h-4 ${inSEO ? 'fill-amber-400 stroke-amber-500' : 'fill-none stroke-current'}" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                          </button>
+                          <span>${item.kw}</span>
+                        </div>
+                      </td>
                       <td class="py-3 px-6">
                         <div class="flex items-center gap-3">
                           <span class="font-extrabold text-slate-800 w-16">${item.vol.toLocaleString()}</span>
@@ -673,7 +727,363 @@
     }
 
     // Initialize on load
-    document.addEventListener('DOMContentLoaded', renderReport);
+    document.addEventListener('DOMContentLoaded', () => { renderReport(); initSEOPanel(); });
+  </script>
+
+  <!-- ===== SEO Panel Overlay ===== -->
+  <div id="seoPanelOverlay" onclick="toggleSEOPanel()" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
+
+  <!-- ===== SEO Keywords Side Panel ===== -->
+  <div id="seoPanel" class="fixed top-0 left-0 h-full w-full max-w-sm bg-white shadow-2xl z-50 flex flex-col" style="transform: translateX(-100%);">
+
+    <!-- Panel Header -->
+    <div class="bg-slate-900 text-white px-5 py-4 flex items-center justify-between flex-shrink-0">
+      <div>
+        <h3 class="font-extrabold text-base">⭐ רשימת מילות מפתח לקידום</h3>
+        <p class="text-xs text-slate-400 mt-0.5">הוסף, הסר או ערוך – עד 50 מילות מפתח</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="seoBadge" class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-emerald-500 text-white">50/50</span>
+        <button onclick="toggleSEOPanel()" class="text-slate-400 hover:text-white p-1 rounded transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="bg-slate-800 px-5 py-2 flex-shrink-0">
+      <div class="w-full bg-slate-700 rounded-full h-1.5">
+        <div id="seoProgressBar" class="h-1.5 rounded-full bg-emerald-500 transition-all duration-300" style="width:100%"></div>
+      </div>
+      <div class="flex justify-between text-xs text-slate-400 mt-1">
+        <span id="seoCountLabel">50 מילות מפתח נבחרו</span>
+        <span id="seoSlotLabel" class="text-emerald-400 font-semibold">מלא</span>
+      </div>
+    </div>
+
+    <!-- Add Custom Keyword -->
+    <div class="px-4 py-3 border-b border-slate-200 bg-slate-50 flex-shrink-0">
+      <div class="flex gap-2">
+        <input type="text" id="customKwInput" placeholder="הוסף מילת מפתח ידנית..." maxlength="80"
+          class="flex-1 text-sm border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          onkeydown="if(event.key==='Enter')addCustomKw()">
+        <button onclick="addCustomKw()" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold px-3 py-2 rounded-lg transition whitespace-nowrap">+ הוסף</button>
+      </div>
+    </div>
+
+    <!-- Filter by Category -->
+    <div class="px-4 pt-3 pb-2 flex-shrink-0 border-b border-slate-100">
+      <div class="flex gap-1.5 flex-wrap">
+        <button onclick="setSEOFilter('all')" data-filter="all" class="seo-filter-btn text-xs font-bold px-2.5 py-1 rounded-md bg-slate-800 text-white transition">הכל</button>
+        <button onclick="setSEOFilter('ביטוח בריאות ומחלות קשות')" data-filter="ביטוח בריאות ומחלות קשות" class="seo-filter-btn text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 transition">מחלות קשות</button>
+        <button onclick="setSEOFilter('ביטוח משכנתא ודירה')" data-filter="ביטוח משכנתא ודירה" class="seo-filter-btn text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 transition">משכנתא</button>
+        <button onclick="setSEOFilter('פנסיה וגמל')" data-filter="פנסיה וגמל" class="seo-filter-btn text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 transition">פנסיה</button>
+        <button onclick="setSEOFilter('קרן השתלמות')" data-filter="קרן השתלמות" class="seo-filter-btn text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 transition">השתלמות</button>
+        <button onclick="setSEOFilter('תיקון 190')" data-filter="תיקון 190" class="seo-filter-btn text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 transition">תיקון 190</button>
+      </div>
+    </div>
+
+    <!-- Keywords List -->
+    <div id="seoPanelList" class="flex-1 overflow-y-auto px-4 py-3 space-y-1"></div>
+
+    <!-- Footer -->
+    <div class="px-4 py-3 border-t border-slate-200 bg-slate-50 flex gap-2 flex-shrink-0">
+      <button onclick="exportSEOCSV()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        ייצוא CSV
+      </button>
+      <button onclick="clearSEOList()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-sm font-bold px-4 py-2.5 rounded-lg transition">נקה הכל</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="seoToast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] hidden">
+    <div id="seoToastMsg" class="bg-slate-900 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-xl seo-notification"></div>
+  </div>
+
+  <script>
+    /* ============================================================
+       SEO KEYWORDS PANEL – LOGIC
+       ============================================================ */
+
+    const initialSEOKeywords = [
+      { kw: 'ביטוח מחלות קשות השוואה',          cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח מחלות קשות האם כדאי',          cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'השוואת ביטוח מחלות קשות',            cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח מחלות קשות מחיר',              cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'פוליסת מחלות קשות',                   cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח בריאות פרטי השוואה',           cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח בריאות פרטי כמה עולה',         cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח חיים פרטי מחיר',               cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח חיים פרטי השוואה',             cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח חיים פרטי מומלץ',              cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוח חיים כמה עולה',                 cat: 'ביטוח בריאות ומחלות קשות' },
+      { kw: 'ביטוחי חיים למשכנתא',                cat: 'ביטוח משכנתא ודירה' },
+      { kw: 'השוואת ביטוחי משכנתא',               cat: 'ביטוח משכנתא ודירה' },
+      { kw: 'ביטוח משכנתא מחיר',                  cat: 'ביטוח משכנתא ודירה' },
+      { kw: 'ביטוח משכנתא סוכן ביטוח',           cat: 'ביטוח משכנתא ודירה' },
+      { kw: 'ביטוח דירה תכולה השוואה',            cat: 'ביטוח משכנתא ודירה' },
+      { kw: 'ביטוח דירה מחיר',                    cat: 'ביטוח משכנתא ודירה' },
+      { kw: 'ביטוח רכב עסקי השוואה',              cat: 'ביטוח רכב ועסק' },
+      { kw: 'ביטוח רכב לעסק',                     cat: 'ביטוח רכב ועסק' },
+      { kw: 'ביטוח נסיעות לחול מחיר',             cat: 'ביטוח נסיעות' },
+      { kw: 'בדיקת תיק ביטוחי',                   cat: 'בדיקת תיק וכפל ביטוחים' },
+      { kw: 'בדיקת ביטוחים חינם',                  cat: 'בדיקת תיק וכפל ביטוחים' },
+      { kw: 'סקירת תיק ביטוחי',                   cat: 'בדיקת תיק וכפל ביטוחים' },
+      { kw: 'כפל ביטוחים איך לבדוק',              cat: 'בדיקת תיק וכפל ביטוחים' },
+      { kw: 'כפל ביטוחים בריאות',                  cat: 'בדיקת תיק וכפל ביטוחים' },
+      { kw: 'קרן פנסיה לעצמאים',                   cat: 'פנסיה וגמל' },
+      { kw: 'פנסיה לעצמאים',                       cat: 'פנסיה וגמל' },
+      { kw: 'יועץ פנסיוני מומלץ',                 cat: 'פנסיה וגמל' },
+      { kw: 'ייעוץ פנסיה',                         cat: 'פנסיה וגמל' },
+      { kw: 'בדיקת פנסיה',                         cat: 'פנסיה וגמל' },
+      { kw: 'סוכן פנסיה',                          cat: 'פנסיה וגמל' },
+      { kw: 'השוואת קרנות פנסיה',                 cat: 'פנסיה וגמל' },
+      { kw: 'קיבוע זכויות פנסיה',                  cat: 'פנסיה וגמל' },
+      { kw: 'דמי ניהול פנסיה',                     cat: 'פנסיה וגמל' },
+      { kw: 'הלוואה על חשבון הפנסיה',             cat: 'פנסיה וגמל' },
+      { kw: 'קרנות השתלמות לעצמאים',              cat: 'קרן השתלמות' },
+      { kw: 'בדיקת קרנות השתלמות',               cat: 'קרן השתלמות' },
+      { kw: 'דמי ניהול קרנות השתלמות',           cat: 'קרן השתלמות' },
+      { kw: 'קרן השתלמות מומלצת',                cat: 'קרן השתלמות' },
+      { kw: 'קרן השתלמות הכי טובה',              cat: 'קרן השתלמות' },
+      { kw: 'תיקון 190',                           cat: 'תיקון 190' },
+      { kw: 'תיקון 190 חסרונות',                  cat: 'תיקון 190' },
+      { kw: 'קופת גמל תיקון 190',                 cat: 'תיקון 190' },
+      { kw: 'מה זה תיקון 190',                    cat: 'תיקון 190' },
+      { kw: 'פמילי אופיס ביטוח',                  cat: 'פמילי אופיס ומסלקה' },
+      { kw: 'מסלקה פנסיונית',                     cat: 'פמילי אופיס ומסלקה' },
+      { kw: 'מסלקה פנסיונית איך עובד',           cat: 'פמילי אופיס ומסלקה' },
+      { kw: 'איתור כספי פנסיה אבודים',            cat: 'פמילי אופיס ומסלקה' },
+      { kw: 'בדיקת כספים אבודים פנסיה',          cat: 'פמילי אופיס ומסלקה' },
+      { kw: 'סוכן ביטוח מומלץ',                   cat: 'כללי' },
+    ];
+
+    let seoKeywords = initialSEOKeywords.map(k => ({ ...k }));
+    let seoPanelOpen = false;
+    let seoFilter = 'all';
+
+    const catColors = {
+      'ביטוח בריאות ומחלות קשות': 'bg-rose-100 text-rose-700',
+      'ביטוח משכנתא ודירה':       'bg-blue-100 text-blue-700',
+      'ביטוח רכב ועסק':           'bg-orange-100 text-orange-700',
+      'ביטוח נסיעות':              'bg-sky-100 text-sky-700',
+      'בדיקת תיק וכפל ביטוחים':  'bg-violet-100 text-violet-700',
+      'פנסיה וגמל':                'bg-emerald-100 text-emerald-700',
+      'קרן השתלמות':               'bg-teal-100 text-teal-700',
+      'תיקון 190':                  'bg-amber-100 text-amber-700',
+      'פמילי אופיס ומסלקה':       'bg-purple-100 text-purple-700',
+      'כללי':                       'bg-slate-100 text-slate-600',
+    };
+
+    function initSEOPanel() {
+      updateSEOBadge();
+      renderSEOPanel();
+    }
+
+    function toggleSEOPanel() {
+      seoPanelOpen = !seoPanelOpen;
+      const panel   = document.getElementById('seoPanel');
+      const overlay = document.getElementById('seoPanelOverlay');
+      if (seoPanelOpen) {
+        panel.classList.add('panel-open');
+        overlay.classList.remove('hidden');
+        renderSEOPanel();
+      } else {
+        panel.classList.remove('panel-open');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    function setSEOFilter(f) {
+      seoFilter = f;
+      document.querySelectorAll('.seo-filter-btn').forEach(btn => {
+        if (btn.dataset.filter === f) {
+          btn.className = 'seo-filter-btn text-xs font-bold px-2.5 py-1 rounded-md bg-slate-800 text-white transition';
+        } else {
+          btn.className = 'seo-filter-btn text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+        }
+      });
+      renderSEOPanel();
+    }
+
+    function isInSEO(kw) {
+      return seoKeywords.some(k => k.kw === kw);
+    }
+
+    function toggleKwSEO(btn) {
+      const kw  = btn.getAttribute('data-kw');
+      const cat = btn.getAttribute('data-cat') || 'כללי';
+      if (isInSEO(kw)) {
+        removeFromSEO(kw, true);
+        showToast('הוסר מהרשימה: ' + kw, 'remove');
+      } else {
+        if (seoKeywords.length >= 50) {
+          showToast('הגעת למגבלה של 50 מילות מפתח!', 'error');
+          return;
+        }
+        seoKeywords.push({ kw, cat });
+        updateSEOBadge();
+        renderReport();
+        if (seoPanelOpen) renderSEOPanel();
+        showToast('נוסף לרשימה: ' + kw, 'add');
+      }
+    }
+
+    function removeFromSEO(kw, rerender = true) {
+      seoKeywords = seoKeywords.filter(k => k.kw !== kw);
+      updateSEOBadge();
+      renderSEOPanel();
+      if (rerender) renderReport();
+    }
+
+    function addCustomKw() {
+      const input = document.getElementById('customKwInput');
+      const kw = input.value.trim();
+      if (!kw) return;
+      if (isInSEO(kw)) { showToast('מילה זו כבר ברשימה', 'error'); return; }
+      if (seoKeywords.length >= 50) { showToast('הגעת למגבלה של 50 מילות מפתח!', 'error'); return; }
+      seoKeywords.push({ kw, cat: 'כללי' });
+      input.value = '';
+      updateSEOBadge();
+      renderSEOPanel();
+      renderReport();
+      showToast('נוסף: ' + kw, 'add');
+    }
+
+    function clearSEOList() {
+      if (!confirm('לנקות את כל הרשימה?')) return;
+      seoKeywords = [];
+      updateSEOBadge();
+      renderSEOPanel();
+      renderReport();
+    }
+
+    function updateSEOBadge() {
+      const count = seoKeywords.length;
+      const full  = count >= 50;
+      const badge       = document.getElementById('seoBadge');
+      const headerBadge = document.getElementById('seoHeaderBadge');
+      const bar         = document.getElementById('seoProgressBar');
+      const countLabel  = document.getElementById('seoCountLabel');
+      const slotLabel   = document.getElementById('seoSlotLabel');
+      if (badge) {
+        badge.textContent = count + '/50';
+        badge.className   = `text-xs font-extrabold px-2.5 py-1 rounded-full ${full ? 'bg-rose-500' : 'bg-emerald-500'} text-white`;
+      }
+      if (headerBadge) {
+        headerBadge.textContent = count + '/50';
+        headerBadge.className   = `${full ? 'bg-rose-100 text-rose-600' : 'bg-white text-amber-600'} text-xs font-extrabold px-1.5 py-0.5 rounded-full leading-none`;
+      }
+      if (bar) bar.style.width = (count / 50 * 100) + '%';
+      if (bar) bar.className = `h-1.5 rounded-full transition-all duration-300 ${full ? 'bg-rose-500' : 'bg-emerald-500'}`;
+      if (countLabel) countLabel.textContent = count + ' מילות מפתח נבחרו';
+      if (slotLabel)  slotLabel.textContent  = full ? 'מלא' : (50 - count) + ' מקומות פנויים';
+      if (slotLabel)  slotLabel.className    = `text-xs font-semibold ${full ? 'text-rose-400' : 'text-emerald-400'}`;
+    }
+
+    function renderSEOPanel() {
+      const container = document.getElementById('seoPanelList');
+      if (!container) return;
+
+      let list = seoKeywords;
+      if (seoFilter !== 'all') list = list.filter(k => k.cat === seoFilter);
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-center text-slate-400 py-12">
+          <div class="text-5xl mb-3">📋</div>
+          <p class="text-sm font-medium">${seoKeywords.length === 0 ? 'הרשימה ריקה' : 'אין תוצאות לפילטר זה'}</p>
+          <p class="text-xs mt-1 text-slate-300">${seoKeywords.length === 0 ? 'הוסף מילות מפתח מהדוח או ידנית' : 'נסה פילטר אחר'}</p>
+        </div>`;
+        return;
+      }
+
+      // Group by category
+      const grouped = {};
+      list.forEach(item => {
+        if (!grouped[item.cat]) grouped[item.cat] = [];
+        grouped[item.cat].push(item);
+      });
+
+      container.innerHTML = Object.entries(grouped).map(([cat, items]) => {
+        const tagCls = catColors[cat] || 'bg-slate-100 text-slate-600';
+        return `
+          <div class="mb-3">
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5 flex items-center gap-2">
+              <span class="inline-block px-2 py-0.5 rounded-md ${tagCls} text-xs font-bold">${cat}</span>
+              <span class="text-slate-300">(${items.length})</span>
+            </div>
+            ${items.map(item => {
+              const escaped = item.kw.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+              return `
+                <div class="seo-kw-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100/80 rounded-lg px-3 py-2 mb-1 group border border-slate-200/60 transition cursor-default">
+                  <span class="flex-1 text-sm font-medium text-slate-800 leading-snug">${item.kw}</span>
+                  <div class="flex items-center gap-1 flex-shrink-0">
+                    <button onclick="editSEOKw('${escaped}')" title="ערוך / החלף מילת מפתח"
+                      class="text-slate-400 hover:text-blue-600 transition rounded p-1 hover:bg-blue-50">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                    <button onclick="removeFromSEO('${escaped}')" title="הסר"
+                      class="text-slate-400 hover:text-rose-500 transition rounded p-1 hover:bg-rose-50">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>`;
+      }).join('');
+    }
+
+    function editSEOKw(oldKw) {
+      const newKw = prompt('ערוך או החלף מילת מפתח ברשימה:', oldKw);
+      if (newKw === null) return;
+      const trimmed = newKw.trim();
+      if (!trimmed || trimmed === oldKw) return;
+      if (isInSEO(trimmed)) {
+        showToast('מילה זו כבר קיימת ברשימה', 'error');
+        return;
+      }
+      const item = seoKeywords.find(k => k.kw === oldKw);
+      if (item) {
+        item.kw = trimmed;
+        updateSEOBadge();
+        renderSEOPanel();
+        renderReport();
+        showToast('מילת המפתח עודכנה בהצלחה', 'add');
+      }
+    }
+
+    function exportSEOCSV() {
+      let csv = '\uFEFFמספר,מילת מפתח,קטגוריה\n';
+      seoKeywords.forEach((item, i) => {
+        csv += `${i + 1},"${item.kw}","${item.cat}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'seo-keywords-selected.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    let toastTimer = null;
+    function showToast(msg, type = 'add') {
+      const wrap = document.getElementById('seoToast');
+      const el   = document.getElementById('seoToastMsg');
+      const colors = { add: 'bg-emerald-700', remove: 'bg-slate-700', error: 'bg-rose-600' };
+      el.textContent  = msg;
+      el.className    = `${colors[type] || 'bg-slate-900'} text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-xl seo-notification`;
+      wrap.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      // force reflow so animation restarts
+      void el.offsetWidth;
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+      toastTimer = setTimeout(() => wrap.classList.add('hidden'), 3000);
+    }
   </script>
 </body>
 </html>
